@@ -4,7 +4,10 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import { Comment } from '../comment/comment.entity';
 
 @Entity({
   name: 'Video',
@@ -29,4 +32,7 @@ export class Video {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  @OneToMany(type => Comment, comment => comment.video)
+  comments: Comment[];
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from './video.entity';
 import { CreateVideoDto, FindAllQueryDto } from './video.dto';
-import { VideosResponse } from './video.interface';
+import { VideosResponse, VideoResponse } from './video.interface';
 
 @Injectable()
 export class VideoService {
@@ -15,8 +15,8 @@ export class VideoService {
   async findAll(query: FindAllQueryDto): Promise<VideosResponse> {
     const { page } = query;
 
-    let skip = null;
-    const take = 20;
+    let skip = null; // offset
+    const take = 20; // limit
 
     if (page > 0) {
       skip = (page - 1) * 20;
@@ -32,11 +32,14 @@ export class VideoService {
     };
   }
 
-  async findOne(id: string): Promise<Video> {
-    return await this.videoRepository.findOne(id);
+  async findOne(id: string): Promise<VideoResponse> {
+    const video = await this.videoRepository.findOne(id);
+    return { video };
   }
 
-  async create(video: CreateVideoDto): Promise<Video> {
-    return await this.videoRepository.save(video);
+  async create(video: CreateVideoDto): Promise<VideoResponse> {
+    const createdVideo = await this.videoRepository.save(video);
+    return { video: createdVideo };
+  }
   }
 }

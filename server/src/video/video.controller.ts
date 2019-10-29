@@ -9,7 +9,7 @@ import {
 import { VideoService } from './video.service';
 import { Video } from './video.entity';
 import { CreateVideoDto, FindAllQueryDto } from './video.dto';
-import { VideosResponse } from './video.interface';
+import { VideosResponse, VideoResponse } from './video.interface';
 
 @Controller('videos')
 export class VideoController {
@@ -21,12 +21,12 @@ export class VideoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id): Promise<Video> {
+  findOne(@Param('id') id): Promise<VideoResponse> {
     return this.videoService.findOne(id);
   }
 
   @Post()
-  create(@Body() createVideoDto: CreateVideoDto): Promise<Video> {
+  create(@Body() createVideoDto: CreateVideoDto): Promise<VideoResponse> {
     return this.videoService.create(createVideoDto);
   }
 }

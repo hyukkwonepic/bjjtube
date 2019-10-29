@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { Video } from './video.entity';
 import { CreateVideoDto, FindAllQueryDto } from './video.dto';
 import { VideosResponse, VideoResponse } from './video.interface';
@@ -41,5 +41,10 @@ export class VideoService {
     const createdVideo = await this.videoRepository.save(video);
     return { video: createdVideo };
   }
+
+  async delete(id: string): Promise<VideoResponse> {
+    const video = await this.videoRepository.findOne(id);
+    await this.videoRepository.delete(id);
+    return { video };
   }
 }

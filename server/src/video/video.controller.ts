@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Body,
+  Delete,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { Video } from './video.entity';
@@ -28,5 +29,10 @@ export class VideoController {
   @Post()
   create(@Body() createVideoDto: CreateVideoDto): Promise<VideoResponse> {
     return this.videoService.create(createVideoDto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id): Promise<VideoResponse> {
+    return this.videoService.delete(id);
   }
 }

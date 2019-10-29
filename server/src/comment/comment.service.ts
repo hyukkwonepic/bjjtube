@@ -52,4 +52,10 @@ export class CommentService {
       },
     };
   }
+
+  async delete(id: string): Promise<CommentResponseDto> {
+    const comment = await this.commentRepository.findOne(id);
+    await this.commentRepository.delete(id);
+    return { comment };
+  }
 }

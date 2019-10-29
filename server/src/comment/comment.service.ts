@@ -18,6 +18,9 @@ export class CommentService {
 
   async findAllByVideo(videoId: string): Promise<CommentsResponseDto> {
     const [comments, count] = await this.commentRepository.findAndCount({
+      order: {
+        createdAt: 'DESC',
+      },
       where: {
         video: {
           id: videoId,

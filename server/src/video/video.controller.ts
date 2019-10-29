@@ -8,7 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
-import { Video } from './video.entity';
 import { CreateVideoDto, FindAllQueryDto } from './video.dto';
 import { VideosResponse, VideoResponse } from './video.interface';
 

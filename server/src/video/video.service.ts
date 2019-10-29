@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Video } from './video.entity';
 import { CreateVideoDto, FindAllQueryDto } from './video.dto';
 import { VideosResponse, VideoResponse } from './video.interface';

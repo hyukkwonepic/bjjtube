@@ -5,29 +5,27 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToOne,
 } from 'typeorm';
-
+import { Video } from '../video/video.entity';
 import { Comment } from '../comment/comment.entity';
-import { User } from '../user/user.entity';
 
 @Entity({
-  name: 'Video',
+  name: 'User',
 })
-export class Video {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  videoUrl: string;
-
-  @Column()
-  title: string;
-
   @Column({
-    nullable: true,
+    unique: true,
   })
-  description: string;
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column()
+  username: string;
 
   @CreateDateColumn()
   createdAt: string;
@@ -35,9 +33,9 @@ export class Video {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(type => Comment, comment => comment.video)
-  comments: Comment[];
+  @OneToMany(type => Video, video => video.user)
+  videos: Video[];
 
-  @ManyToOne(type => User, user => user.videos)
-  user: User;
+  @OneToMany(type => Comment, comment => comment.user)
+  comments: Comment[];
 }

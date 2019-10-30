@@ -7,6 +7,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Video } from '../video/video.entity';
+import { User } from '../user/user.entity';
 
 @Entity({
   name: 'Comment',
@@ -26,4 +27,7 @@ export class Comment {
 
   @ManyToOne(type => Video, video => video.comments)
   video: Video;
+
+  @ManyToOne(type => User, user => user.comments)
+  user: User;
 }

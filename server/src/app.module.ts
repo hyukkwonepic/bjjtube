@@ -5,6 +5,7 @@ import { RouterModule, Route } from 'nest-router';
 import { VideoModule } from './video/video.module';
 import { CommentModule } from './comment/comment.module';
 import { routes } from './routes';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { routes } from './routes';
     RouterModule.forRoutes(routes),
     VideoModule,
     CommentModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

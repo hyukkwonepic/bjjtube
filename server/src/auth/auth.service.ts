@@ -6,7 +6,7 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const { user } = await this.userService.findOne(email);
+    const user = await this.userService.findOne(email);
     if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
@@ -15,7 +15,7 @@ export class AuthService {
   }
 
   async checkEmailExists(email: string): Promise<any> {
-    const { user } = await this.userService.findOne(email);
+    const user = await this.userService.findOne(email);
 
     if (user) {
       throw new UnauthorizedException();
@@ -29,7 +29,7 @@ export class AuthService {
     password: string,
     username: string,
   ): Promise<any> {
-    const { user } = await this.userService.create({
+    const user = await this.userService.create({
       email,
       password,
       username,

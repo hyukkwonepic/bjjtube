@@ -8,10 +8,12 @@ import {
   Delete,
   UseGuards,
   Req,
+  Put,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import {
   CreateVideoDto,
+  UpdateVideoDto,
   FindAllQueryDto,
   VideosResponseDto,
   VideoResponseDto,
@@ -45,6 +47,22 @@ export class VideoController {
   ): Promise<VideoResponseDto> {
     const { id: userId } = req.user;
     const video = await this.videoService.create(userId, createVideoDto);
+    return { video };
+  }
+
+  @UseGuards(AuthGuard)
+  @Put(':videoId')
+  async update(
+    @Req() req,
+    @Param('videoId') videoId,
+    @Body() updateVideoDto: UpdateVideoDto,
+  ): Promise<VideoResponseDto> {
+    const { id: userId } = req.user;
+    const video = await this.videoService.update(
+      userId,
+      videoId,
+      updateVideoDto,
+    );
     return { video };
   }
 

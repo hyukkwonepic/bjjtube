@@ -7,6 +7,7 @@ import {
   FindAllQueryDto,
   VideosResponseDto,
   VideoResponseDto,
+  UpdateVideoDto,
 } from './video.dto';
 
 @Injectable()
@@ -45,13 +46,13 @@ export class VideoService {
       .getOne();
   }
 
-  async create(userId: string, video: CreateVideoDto): Promise<Video> {
+  async create(userId: string, createVideoDto: CreateVideoDto): Promise<Video> {
     const { identifiers } = await this.videoRepository
       .createQueryBuilder()
       .insert()
       .into(Video)
       .values({
-        ...video,
+        ...createVideoDto,
         user: {
           id: userId,
         },
@@ -64,6 +65,33 @@ export class VideoService {
       .createQueryBuilder()
       .where('id = :id', { id })
       .getOne();
+  }
+
+  async update(
+    userId: string,
+    videoId: string,
+    updateVideoDto: UpdateVideoDto,
+  ): Promise<Video> {
+    const videoQueryBuilder = this.videoRepository
+      .createQueryBuilder()
+      .leftJoin('Video.user', 'User')
+      .select(['Video', 'User.id'])
+      .where('Video.id = :videoId', { videoId });
+
+    const video = await videoQueryBuilder.getOne();
+
+    if (video.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
+
+    await this.videoRepository
+      .createQueryBuilder()
+      .update(Video)
+      .set(updateVideoDto)
+      .where('Video.id = :videoId', { videoId })
+      .execute();
+
+    return await videoQueryBuilder.getOne();
   }
 
   async delete(videoId: string, userId: string): Promise<Video> {

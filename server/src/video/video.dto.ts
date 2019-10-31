@@ -6,6 +6,12 @@ export class CreateVideoDto {
   readonly description?: string;
 }
 
+export class UpdateVideoDto {
+  readonly videoUrl?: string;
+  readonly title?: string;
+  readonly description?: string;
+}
+
 export class FindAllQueryDto {
   readonly page?: number;
 }

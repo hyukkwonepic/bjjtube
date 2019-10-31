@@ -1,20 +1,21 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.userService.findOne(email);
     if (user && user.password === password) {
       const { password, ...result } = user;
-      return result;
+      return result as User;
     }
     return null;
   }
 
-  async checkEmailExists(email: string): Promise<any> {
+  async checkEmailExists(email: string): Promise<null> {
     const user = await this.userService.findOne(email);
 
     if (user) {
@@ -28,7 +29,7 @@ export class AuthService {
     email: string,
     password: string,
     username: string,
-  ): Promise<any> {
+  ): Promise<User | null> {
     const user = await this.userService.create({
       email,
       password,
@@ -36,7 +37,7 @@ export class AuthService {
     });
     if (user && user.password) {
       const { password, ...result } = user;
-      return result;
+      return result as User;
     }
     return null;
   }

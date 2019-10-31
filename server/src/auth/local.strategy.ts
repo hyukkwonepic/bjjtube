@@ -2,6 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -37,7 +38,7 @@ export class LocalSignupStrategy extends PassportStrategy(
     @Request() req,
     email: string,
     password: string,
-  ): Promise<any> {
+  ): Promise<User> {
     const { username } = req.body;
     await this.authService.checkEmailExists(email);
     return await this.authService.signupUser(email, password, username);

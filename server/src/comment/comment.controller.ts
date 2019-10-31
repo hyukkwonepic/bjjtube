@@ -6,6 +6,7 @@ import {
   Body,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import {
@@ -31,10 +32,13 @@ export class CommentController {
   @UseGuards(AuthGuard)
   @Post('/')
   async create(
+    @Req() req,
     @Param('videoId') videoId,
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentResponseDto> {
+    const { id: userId } = req.user;
     const { id, content } = await this.commentService.create(
+      userId,
       videoId,
       createCommentDto,
     );
@@ -48,8 +52,12 @@ export class CommentController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id): Promise<CommentResponseDto> {
-    const comment = await this.commentService.delete(id);
+  async delete(
+    @Req() req,
+    @Param('id') commentId,
+  ): Promise<CommentResponseDto> {
+    const { id: userId } = req.user;
+    const comment = await this.commentService.delete(userId, commentId);
     return { comment };
   }
 }

@@ -1,13 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './comment.entity';
-import {
-  CreateCommentDto,
-  CommentsResponseDto,
-  CommentResponseDto,
-} from './comment.dto';
-import { Video } from '../video/video.entity';
+import { CreateCommentDto } from './comment.dto';
 
 @Injectable()
 export class CommentService {
@@ -17,35 +12,62 @@ export class CommentService {
   ) {}
 
   async findAll(videoId: string): Promise<[Comment[], number]> {
-    return await this.commentRepository.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      where: {
+    return await this.commentRepository
+      .createQueryBuilder()
+      .leftJoin('Comment.user', 'User')
+      .orderBy('Comment.createdAt', 'DESC')
+      .select(['Comment', 'User.id', 'User.username'])
+      .where('Comment.videoId = :videoId', { videoId })
+      .getManyAndCount();
+  }
+
+  async create(
+    userId: string,
+    videoId: string,
+    createCommentDto: CreateCommentDto,
+  ): Promise<Comment> {
+    const { identifiers } = await this.commentRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Comment)
+      .values({
+        ...createCommentDto,
+        user: {
+          id: userId,
+        },
         video: {
           id: videoId,
         },
-      },
-    });
+      })
+      .execute();
+
+    const [{ id }] = identifiers;
+
+    return await this.commentRepository
+      .createQueryBuilder()
+      .where('Comment.id = :id', { id })
+      .getOne();
   }
 
-  async create(videoId: string, comment: CreateCommentDto): Promise<Comment> {
-    const video = new Video();
-    video.id = videoId;
+  async delete(userId: string, commentId: string): Promise<Comment> {
+    const comment = await this.commentRepository
+      .createQueryBuilder()
+      .leftJoin('Comment.user', 'User')
+      .select(['Comment', 'User.id'])
+      .where('Comment.id = :commentId', { commentId })
+      .getOne();
 
-    let newComment = new Comment();
-    newComment = {
-      ...newComment,
-      ...comment,
-      video,
-    };
+    if (comment.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
 
-    return await this.commentRepository.save(newComment);
-  }
+    await this.commentRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Comment)
+      .where('Comment.id = :commentId', { commentId })
+      .execute();
 
-  async delete(id: string): Promise<Comment> {
-    const comment = await this.commentRepository.findOne(id);
-    await this.commentRepository.delete(id);
     return comment;
   }
 }

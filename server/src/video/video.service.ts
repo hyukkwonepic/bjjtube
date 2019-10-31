@@ -2,13 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from './video.entity';
-import {
-  CreateVideoDto,
-  FindAllQueryDto,
-  VideosResponseDto,
-  VideoResponseDto,
-  UpdateVideoDto,
-} from './video.dto';
+import { CreateVideoDto, UpdateVideoDto } from './video.dto';
 
 @Injectable()
 export class VideoService {
@@ -17,9 +11,7 @@ export class VideoService {
     private readonly videoRepository: Repository<Video>,
   ) {}
 
-  async findAll(query: FindAllQueryDto): Promise<[Video[], number]> {
-    const { page } = query;
-
+  async findAll(page?: number): Promise<[Video[], number]> {
     let offset = null;
     const limit = 20;
 

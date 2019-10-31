@@ -12,10 +12,6 @@ export class UpdateVideoDto {
   readonly description?: string;
 }
 
-export class FindAllQueryDto {
-  readonly page?: number;
-}
-
 export class VideosResponseDto {
   readonly videos: Video[];
   readonly count: number;

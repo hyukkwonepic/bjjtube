@@ -14,7 +14,6 @@ import { VideoService } from './video.service';
 import {
   CreateVideoDto,
   UpdateVideoDto,
-  FindAllQueryDto,
   VideosResponseDto,
   VideoResponseDto,
 } from './video.dto';
@@ -25,8 +24,8 @@ export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @Get('/')
-  async findAll(@Query() query: FindAllQueryDto): Promise<VideosResponseDto> {
-    const [videos, count] = await this.videoService.findAll(query);
+  async findAll(@Query('page') page?: number): Promise<VideosResponseDto> {
+    const [videos, count] = await this.videoService.findAll(page);
     return {
       videos,
       count,

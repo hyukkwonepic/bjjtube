@@ -16,8 +16,8 @@ export class CommentService {
     private readonly commentRepository: Repository<Comment>,
   ) {}
 
-  async findAllByVideo(videoId: string): Promise<CommentsResponseDto> {
-    const [comments, count] = await this.commentRepository.findAndCount({
+  async findAll(videoId: string): Promise<[Comment[], number]> {
+    return await this.commentRepository.findAndCount({
       order: {
         createdAt: 'DESC',
       },
@@ -27,16 +27,9 @@ export class CommentService {
         },
       },
     });
-    return {
-      comments,
-      count,
-    };
   }
 
-  async createByVideo(
-    videoId: string,
-    comment: CreateCommentDto,
-  ): Promise<CommentResponseDto> {
+  async create(videoId: string, comment: CreateCommentDto): Promise<Comment> {
     const video = new Video();
     video.id = videoId;
 
@@ -47,18 +40,12 @@ export class CommentService {
       video,
     };
 
-    const { id, content } = await this.commentRepository.save(newComment);
-    return {
-      comment: {
-        id,
-        content,
-      },
-    };
+    return await this.commentRepository.save(newComment);
   }
 
-  async delete(id: string): Promise<CommentResponseDto> {
+  async delete(id: string): Promise<Comment> {
     const comment = await this.commentRepository.findOne(id);
     await this.commentRepository.delete(id);
-    return { comment };
+    return comment;
   }
 }

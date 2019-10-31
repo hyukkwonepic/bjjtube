@@ -1,5 +1,4 @@
-import { Injectable, ExecutionContext, CanActivate } from '@nestjs/common';
-import { UserService } from '../../user/user.service';
+import { Injectable, ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()

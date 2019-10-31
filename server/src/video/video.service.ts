@@ -55,7 +55,7 @@ export class VideoService {
 
     return await this.videoRepository
       .createQueryBuilder()
-      .where('id = :id', { id })
+      .where('Video.id = :id', { id })
       .getOne();
   }
 
@@ -86,7 +86,7 @@ export class VideoService {
     return await videoQueryBuilder.getOne();
   }
 
-  async delete(videoId: string, userId: string): Promise<Video> {
+  async delete(userId: string, videoId: string): Promise<Video> {
     const video = await this.videoRepository
       .createQueryBuilder()
       .leftJoin('Video.user', 'User')
@@ -102,7 +102,7 @@ export class VideoService {
       .createQueryBuilder()
       .delete()
       .from(Video)
-      .where('id = :videoId', { videoId })
+      .where('Video.id = :videoId', { videoId })
       .execute();
 
     return video;

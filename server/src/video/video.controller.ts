@@ -72,7 +72,7 @@ export class VideoController {
     @Param('videoId') videoId,
   ): Promise<VideoResponseDto> {
     const { id: userId } = req.user;
-    const video = await this.videoService.delete(videoId, userId);
+    const video = await this.videoService.delete(userId, videoId);
     return { video };
   }
 }

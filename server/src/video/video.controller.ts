@@ -6,6 +6,8 @@ import {
   Post,
   Body,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import {
@@ -14,6 +16,7 @@ import {
   VideosResponseDto,
   VideoResponseDto,
 } from './video.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @Controller()
 export class VideoController {
@@ -34,8 +37,14 @@ export class VideoController {
     return this.videoService.create(createVideoDto);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id): Promise<VideoResponseDto> {
-    return this.videoService.delete(id);
+  @UseGuards(AuthGuard)
+  @Delete(':videoId')
+  async delete(
+    @Req() req,
+    @Param('videoId') videoId,
+  ): Promise<VideoResponseDto> {
+    const { id: userId } = req.user;
+    const video = await this.videoService.delete(videoId, userId);
+    return { video };
   }
 }

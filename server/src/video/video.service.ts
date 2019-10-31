@@ -49,9 +49,25 @@ export class VideoService {
     return { video: createdVideo };
   }
 
-  async delete(id: string): Promise<VideoResponseDto> {
-    const video = await this.videoRepository.findOne(id);
-    await this.videoRepository.delete(id);
-    return { video };
+  async delete(videoId: string, userId: string): Promise<Video> {
+    const video = await this.videoRepository
+      .createQueryBuilder()
+      .leftJoin('Video.user', 'User')
+      .select(['Video', 'User.id'])
+      .where('Video.id = :videoId', { videoId })
+      .getOne();
+
+    if (video.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
+
+    await this.videoRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Video)
+      .where('id = :videoId', { videoId })
+      .execute();
+
+    return video;
   }
 }

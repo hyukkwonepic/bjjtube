@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from './video.entity';
@@ -16,37 +16,52 @@ export class VideoService {
     private readonly videoRepository: Repository<Video>,
   ) {}
 
-  async findAll(query: FindAllQueryDto): Promise<VideosResponseDto> {
+  async findAll(query: FindAllQueryDto): Promise<[Video[], number]> {
     const { page } = query;
 
-    let skip = null; // offset
-    const take = 20; // limit
+    let offset = null;
+    const limit = 20;
 
     if (page > 0) {
-      skip = (page - 1) * 20;
+      offset = (page - 1) * 20;
     }
-    const [videos, count] = await this.videoRepository.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      skip,
-      take,
-    });
 
-    return {
-      videos,
-      count,
-    };
+    return await this.videoRepository
+      .createQueryBuilder()
+      .leftJoin('Video.user', 'User')
+      .orderBy('Video.createdAt', 'DESC')
+      .select(['Video', 'User.id', 'User.username'])
+      .offset(offset)
+      .limit(limit)
+      .getManyAndCount();
   }
 
-  async findOne(id: string): Promise<VideoResponseDto> {
-    const video = await this.videoRepository.findOne(id);
-    return { video };
+  async findOne(id: string): Promise<Video> {
+    return await this.videoRepository
+      .createQueryBuilder()
+      .where('id = :id', { id })
+      .getOne();
   }
 
-  async create(video: CreateVideoDto): Promise<VideoResponseDto> {
-    const createdVideo = await this.videoRepository.save(video);
-    return { video: createdVideo };
+  async create(userId: string, video: CreateVideoDto): Promise<Video> {
+    const { identifiers } = await this.videoRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Video)
+      .values({
+        ...video,
+        user: {
+          id: userId,
+        },
+      })
+      .execute();
+
+    const [{ id }] = identifiers;
+
+    return await this.videoRepository
+      .createQueryBuilder()
+      .where('id = :id', { id })
+      .getOne();
   }
 
   async delete(videoId: string, userId: string): Promise<Video> {

@@ -23,18 +23,29 @@ export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @Get('/')
-  findAll(@Query() query: FindAllQueryDto): Promise<VideosResponseDto> {
-    return this.videoService.findAll(query);
+  async findAll(@Query() query: FindAllQueryDto): Promise<VideosResponseDto> {
+    const [videos, count] = await this.videoService.findAll(query);
+    return {
+      videos,
+      count,
+    };
   }
 
   @Get(':videoId')
-  findOne(@Param('videoId') id): Promise<VideoResponseDto> {
-    return this.videoService.findOne(id);
+  async findOne(@Param('videoId') id): Promise<VideoResponseDto> {
+    const video = await this.videoService.findOne(id);
+    return { video };
   }
 
+  @UseGuards(AuthGuard)
   @Post('/')
-  create(@Body() createVideoDto: CreateVideoDto): Promise<VideoResponseDto> {
-    return this.videoService.create(createVideoDto);
+  async create(
+    @Req() req,
+    @Body() createVideoDto: CreateVideoDto,
+  ): Promise<VideoResponseDto> {
+    const { id: userId } = req.user;
+    const video = await this.videoService.create(userId, createVideoDto);
+    return { video };
   }
 
   @UseGuards(AuthGuard)

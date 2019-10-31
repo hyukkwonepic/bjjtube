@@ -32,8 +32,8 @@ export class VideoController {
   }
 
   @Get(':videoId')
-  async findOne(@Param('videoId') id): Promise<VideoResponseDto> {
-    const video = await this.videoService.findOne(id);
+  async findOne(@Param('videoId') videoId): Promise<VideoResponseDto> {
+    const video = await this.videoService.findOne(videoId);
     return { video };
   }
 

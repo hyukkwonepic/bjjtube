@@ -39,7 +39,9 @@ export class VideoService {
   async findOne(id: string): Promise<Video> {
     return await this.videoRepository
       .createQueryBuilder()
-      .where('id = :id', { id })
+      .where('Video.id = :videoId', { videoId: id })
+      .leftJoin('Video.user', 'User')
+      .select(['Video', 'User.id', 'User.username'])
       .getOne();
   }
 

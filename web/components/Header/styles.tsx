@@ -15,6 +15,12 @@ export const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 6rem;
+
+  @media only screen and (min-width: 960px) {
+    max-width: 100.4rem;
+    margin: 0 auto;
+    padding: 0;
+  }
 `;
 
 export const Logo = styled.div`

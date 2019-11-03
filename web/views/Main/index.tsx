@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useQuery } from 'react-fetching-library';
+import Grid from '@material-ui/core/Grid';
 
 import { client } from '../../libs/fetching';
 
@@ -17,7 +18,11 @@ const Main: NextPage = () => {
     const { videos } = payload;
     videoCards = videos.map(video => {
       const { id } = video;
-      return <VideoCard key={id} {...video} />;
+      return (
+        <Grid key={id} item xs={12} md={4}>
+          <VideoCard {...video} />
+        </Grid>
+      );
     });
   }
 
@@ -25,8 +30,12 @@ const Main: NextPage = () => {
     <S.Main>
       <Header />
       <S.Section>
-        <S.Title>Trending videos</S.Title>
-        <S.Container>{videoCards}</S.Container>
+        <S.Container>
+          <S.Title>Trending videos</S.Title>
+          <Grid container spacing={2}>
+            {videoCards}
+          </Grid>
+        </S.Container>
       </S.Section>
     </S.Main>
   );

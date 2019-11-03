@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const VideoCard = styled.div`
-  margin-bottom: 1.5rem;
+  @media only screen and (min-width: 960px) {
+    margin-bottom: 3.4rem;
+  }
 
   a {
     text-decoration: unset;
@@ -14,7 +16,6 @@ export const Thumbnail = styled.div`
   height: 0px;
   background: white;
   position: relative;
-  overflow: hidden;
 
   img {
     position: absolute;
@@ -29,7 +30,7 @@ export const Thumbnail = styled.div`
 `;
 
 export const Details = styled.div`
-  padding: 1.5rem 2rem;
+  padding: 1.4rem 2rem;
 `;
 
 export const Title = styled.div`

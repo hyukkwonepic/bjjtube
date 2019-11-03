@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
     /* background-color: #1f1f1f; */
   }
 
-  #root {
+  #__next {
     height: 100%;
   }
 

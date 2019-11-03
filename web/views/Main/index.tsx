@@ -1,6 +1,5 @@
 import { NextPage } from 'next';
-import Link from 'next/link';
-import { useQuery, Action } from 'react-fetching-library';
+import { useQuery } from 'react-fetching-library';
 
 import { client } from '../../libs/fetching';
 

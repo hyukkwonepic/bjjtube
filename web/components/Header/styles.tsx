@@ -2,6 +2,11 @@ import styled from 'styled-components';
 
 export const Header = styled.header`
   background: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
 `;
 
 export const Container = styled.div`

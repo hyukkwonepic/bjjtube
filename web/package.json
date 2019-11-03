@@ -14,7 +14,8 @@
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-fetching-library": "^1.5.12",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "timeago.js": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "^12.12.3",

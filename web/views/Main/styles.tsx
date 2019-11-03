@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const Main = styled.div``;
+export const Main = styled.div`
+  background-color: #1f1f1f;
+`;
 
 export const Section = styled.section`
   padding-top: 6rem;

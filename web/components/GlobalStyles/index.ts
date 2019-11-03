@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     height: 100%;
     font-size: 10px;
-    background-color: #1f1f1f;
+    /* background-color: #1f1f1f; */
   }
 
   #root {
